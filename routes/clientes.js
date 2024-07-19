@@ -23,7 +23,7 @@ router.get('/findAll/view', function(req, res, next) {
   Cliente.findAll({  
     attributes: { exclude: ["updatedAt"] },
     include: [{  
-        model: Servicio,  
+        model: Servicio,
         attributes: ["descripcion", "precio"],  
         through: { attributes: [] }  
     }]  
@@ -33,6 +33,69 @@ router.get('/findAll/view', function(req, res, next) {
   })
   .catch(error => res.status(400).send(error));
 });
+
+router.get('/findAllByService/view', function(req, res, next) {
+    let descripcion = req.query.descripcion || '';
+    Cliente.findAll({
+      attributes: { exclude: ["updatedAt"] },
+      include: [{
+        model: Servicio,
+        attributes: ["descripcion", "precio"],
+        through: { attributes: [] },
+        where: {
+          descripcion: {
+            [Op.like]: `%${descripcion}%`
+          }
+        }
+      }]
+    })
+    .then(clientes => {
+      res.render('clientes', { title: 'Clientes', arrClientes: clientes });
+    })
+    .catch(error => res.status(400).send(error));
+  });  
+
+router.get('/findAllById/:id/json', function(req, res, next) {
+    let id = parseInt(req.params.id);
+    Cliente.findAll({
+      attributes: { exclude: ["updatedAt"] },
+      include: [{
+        model: Servicio,
+        attributes: ["descripcion", "precio"],
+        through: { attributes: [] }
+      }],
+      where: {
+        [Op.and]: [
+          { id: id }
+        ]
+      }
+    })
+    .then(clientes => {
+      res.json(clientes);
+    })
+    .catch(error => res.status(400).send(error));
+  });
+  
+  router.get('/findAllById/:id/view', function(req, res, next) {
+    let id = parseInt(req.params.id);
+    Cliente.findAll({
+      attributes: { exclude: ["updatedAt"] },
+      include: [{
+        model: Servicio,
+        attributes: ["descripcion", "precio"],
+        through: { attributes: [] }
+      }],
+      where: {
+        [Op.and]: [
+          { id: id }
+        ]
+      }
+    })
+    .then(clientes => {
+      res.render('detalles', { title: 'Clientes', arrClientes: clientes });
+    })
+    .catch(error => res.status(400).send(error));
+  });
 
 router.get('/findAllByRate/json', function(req, res, next) {
   let lower = parseFloat(req.query.lower);
@@ -71,48 +134,6 @@ router.get('/findAllByRate/view', function(req, res, next) {
         [Op.between]: [lower, higher] 
       }
     } 
-  })
-  .then(clientes => {
-    res.render('clientes', { title: 'Clientes', arrClientes: clientes });
-  })
-  .catch(error => res.status(400).send(error));
-});
-
-router.get('/findAllById/:id/json', function(req, res, next) {
-  let id = parseInt(req.params.id);
-  Cliente.findAll({
-    attributes: { exclude: ["updatedAt"] },
-    include: [{
-      model: Servicio,
-      attributes: ["descripcion", "precio"],
-      through: { attributes: [] }
-    }],
-    where: {
-      [Op.and]: [
-        { id: id }
-      ]
-    }
-  })
-  .then(clientes => {
-    res.json(clientes);
-  })
-  .catch(error => res.status(400).send(error));
-});
-
-router.get('/findAllById/:id/view', function(req, res, next) {
-  let id = parseInt(req.params.id);
-  Cliente.findAll({
-    attributes: { exclude: ["updatedAt"] },
-    include: [{
-      model: Servicio,
-      attributes: ["descripcion", "precio"],
-      through: { attributes: [] }
-    }],
-    where: {
-      [Op.and]: [
-        { id: id }
-      ]
-    }
   })
   .then(clientes => {
     res.render('clientes', { title: 'Clientes', arrClientes: clientes });

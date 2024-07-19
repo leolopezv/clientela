@@ -1,0 +1,38 @@
+<main class="col-md-8 ms-sm-auto col-lg-10 px-md-4">
+  <div class="form-container">
+      <% if (arrClientes.length > 0) { %>
+          <% arrClientes.forEach(cliente => { %>
+          <div id="fotoDisplay">
+              <div class="form-group">
+                  <label for="descriptionDisplay">Cliente ID</label>
+                  <input type="text" class="form-control" id="descriptionDisplay" value="<%= cliente.id %>" readonly>
+                </div>
+
+              <div class="form-group">
+                <label for="titleDisplay">Cédula</label>
+                <input type="text" class="form-control" id="titleDisplay" value="<%= cliente.cedula %>" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="titleDisplay">Nombre Completo</label>
+                <input type="text" class="form-control" id="titleDisplay" value="<%= cliente.nombre %> <%= cliente.apellido %>" readonly>
+              </div>
+              
+              <div class="form-group">
+                <label for="titleDisplay">Descripción del Servicio</label>
+                <input type="text" class="form-control" id="titleDisplay" value="<% cliente.servicios.forEach(servicio => { %><%= servicio.descripcion %><% }); %>" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="titleDisplay">Precio del Servicio</label>
+                <input type="text" class="form-control" id="titleDisplay" value="<% cliente.servicios.forEach(servicio => { %><%= servicio.precio %><% }); %>" readonly>
+              </div>
+
+              <button type="button" class="btn close-btn" onclick="window.location.href='/clientes/findAll/view'">Atrás</button>
+          </div> 
+          <% }) %>
+        <% } else { %>
+          <p>No photos found.</p>
+        <% } %>              
+  </div>
+</main>
